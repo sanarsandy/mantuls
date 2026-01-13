@@ -1,4 +1,7 @@
 export default defineNuxtConfig({
+  app: {
+    baseURL: process.env.NUXT_APP_BASE_URL || '/'
+  },
   devtools: { enabled: process.env.NODE_ENV !== 'production' },
   css: ['~/assets/css/main.css'],
   modules: ['@pinia/nuxt', 'nuxt-icon'],
@@ -20,7 +23,7 @@ export default defineNuxtConfig({
   vite: {
     server: {
       host: '0.0.0.0',
-      allowedHosts: process.env.VITE_ALLOWED_HOSTS 
+      allowedHosts: process.env.VITE_ALLOWED_HOSTS
         ? process.env.VITE_ALLOWED_HOSTS.split(',')
         : ['localhost', '127.0.0.1']
     }
