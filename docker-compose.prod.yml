@@ -11,7 +11,7 @@ services:
     container_name: mantuls-app-prod
     restart: unless-stopped
     ports:
-      - "3003:3000"
+      - "3011:3000"
     environment:
       NODE_ENV: production
       NUXT_PUBLIC_API_BASE: ${NUXT_PUBLIC_API_BASE:-https://api.yourdomain.com}
@@ -29,7 +29,7 @@ services:
     container_name: mantuls-api-prod
     restart: unless-stopped
     ports:
-      - "8003:8000"
+      - "8011:8000"
     environment:
       - OCR_SECRET_KEY=${OCR_SECRET_KEY}
       - JWT_SECRET=${JWT_SECRET}

@@ -27,8 +27,8 @@ docker compose -f docker-compose.prod.yml up -d --build
 # Check status
 if [ $? -eq 0 ]; then
     echo "✅ Deployment Successful!"
-    echo "🌐 Frontend running at: http://localhost:3003"
-    echo "🔌 Backend running at: http://localhost:8003"
+    echo "🌐 Frontend running at: http://localhost:3011"
+    echo "🔌 Backend running at: http://localhost:8011"
     echo ""
     echo "To monitor logs:"
     echo "  docker compose -f docker-compose.prod.yml logs -f"

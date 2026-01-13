@@ -68,7 +68,7 @@ ManTuls is an internal comprehensive office productivity tool suite developed fo
    Use the provided helper script:
    ```bash
    chmod +x deploy_prod.sh
-   ./deploy_prod.sh http://your-server-ip:8003
+   ./deploy_prod.sh http://your-server-ip:8011
    ```
    
    Or manually:
@@ -76,8 +76,8 @@ ManTuls is an internal comprehensive office productivity tool suite developed fo
    docker compose -f docker-compose.prod.yml up -d --build
    ```
 
-   - **Production Frontend**: Port 3003
-   - **Production Backend**: Port 8003
+   - **Production Frontend**: Port 3011
+   - **Production Backend**: Port 8011
 
 ## 🔒 Security
 
