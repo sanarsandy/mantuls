@@ -15,6 +15,7 @@ services:
     environment:
       NODE_ENV: production
       NUXT_PUBLIC_API_BASE: ${NUXT_PUBLIC_API_BASE}
+      NUXT_APP_BASE_URL: ${NUXT_APP_BASE_URL:-/}
       NITRO_PRESET: node-server
     depends_on:
       - api
