@@ -63,32 +63,39 @@
         />
 
         <!-- File List -->
-        <div v-if="files.length > 0" class="mt-8">
-          <label class="label-mono mb-4">Files to merge ({{ files.length }})</label>
-          <div class="space-y-2">
-            <div 
-              v-for="(file, index) in files" 
-              :key="index"
-              class="flex items-center justify-between p-4 border border-[var(--border-light)] hover:border-[var(--foreground)] transition-colors"
+        <client-only>
+          <div v-if="files.length > 0" class="mt-8">
+            <label class="label-mono mb-4">Files to merge ({{ files.length }}) - Drag to reorder</label>
+            <draggable 
+              v-model="files" 
+              item-key="name"
+              class="space-y-2"
+              ghost-class="opacity-50"
             >
-              <div class="flex items-center space-x-4">
-                <div class="w-8 h-8 border border-[var(--foreground)] flex items-center justify-center text-sm font-mono">
-                  {{ index + 1 }}
+              <template #item="{ element: file, index }">
+                <div 
+                  class="flex items-center justify-between p-4 border border-[var(--border-light)] hover:border-[var(--foreground)] transition-colors cursor-move bg-[var(--background)]"
+                >
+                  <div class="flex items-center space-x-4">
+                    <div class="w-8 h-8 border border-[var(--foreground)] flex items-center justify-center text-sm font-mono">
+                      {{ index + 1 }}
+                    </div>
+                    <div>
+                      <p class="font-medium">{{ file.name }}</p>
+                      <p class="text-xs text-[var(--muted-foreground)]">{{ formatSize(file.size) }}</p>
+                    </div>
+                  </div>
+                  <button 
+                    @click="removeFile(index)" 
+                    class="text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+                  >
+                    <Icon name="heroicons:x-mark" class="w-5 h-5" />
+                  </button>
                 </div>
-                <div>
-                  <p class="font-medium">{{ file.name }}</p>
-                  <p class="text-xs text-[var(--muted-foreground)]">{{ formatSize(file.size) }}</p>
-                </div>
-              </div>
-              <button 
-                @click="removeFile(index)" 
-                class="text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
-              >
-                <Icon name="heroicons:x-mark" class="w-5 h-5" />
-              </button>
-            </div>
+              </template>
+            </draggable>
           </div>
-        </div>
+        </client-only>
 
         <!-- Error Message -->
         <div v-if="error" class="alert-mono-error mt-6 flex items-start space-x-3">
@@ -133,6 +140,8 @@
 </template>
 
 <script setup>
+import draggable from 'vuedraggable'
+
 definePageMeta({
   middleware: ['auth']
 })

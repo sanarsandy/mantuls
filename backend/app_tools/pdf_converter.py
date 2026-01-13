@@ -10,6 +10,64 @@ import os
 logger = logging.getLogger(__name__)
 
 
+
+def pdf_to_excel(pdf_bytes: bytes) -> bytes:
+    """
+    Convert PDF to Excel (XLSX) by extracting tables and merging them into one sheet.
+    
+    Args:
+        pdf_bytes: PDF file content as bytes
+        
+    Returns:
+        XLSX file as bytes
+    """
+    import pdfplumber
+    import pandas as pd
+    
+    all_rows = []
+    
+    # Robust settings for table extraction
+    table_settings = {
+        "vertical_strategy": "lines", 
+        "horizontal_strategy": "lines",
+        "intersection_y_tolerance": 10,
+        "intersection_x_tolerance": 10,
+        "snap_tolerance": 3,
+    }
+    
+    with pdfplumber.open(io.BytesIO(pdf_bytes)) as pdf:
+        for page in pdf.pages:
+            # Try to extract tables with settings
+            tables = page.extract_tables(table_settings)
+            
+            # If "lines" strategy fails (no gridlines), fallback to "text" strategy
+            if not tables:
+                 tables = page.extract_tables()
+                 
+            for table in tables:
+                if table:
+                    all_rows.extend(table)
+                    
+    if not all_rows:
+        raise ValueError("No tables found in the PDF")
+        
+    df = pd.DataFrame(all_rows)
+    
+    # Cleaning: Drop columns that are completely empty (all None/NaN)
+    df.dropna(axis=1, how='all', inplace=True)
+    
+    # Cleaning: Drop rows that are completely empty
+    df.dropna(axis=0, how='all', inplace=True)
+    
+    # Write to Excel
+    output = io.BytesIO()
+    with pd.ExcelWriter(output, engine='openpyxl') as writer:
+        df.to_excel(writer, sheet_name="Converted Data", index=False, header=False)
+            
+    output.seek(0)
+    return output.read()
+
+
 def pdf_to_word(pdf_bytes: bytes) -> bytes:
     """
     Convert PDF to Word document (DOCX).

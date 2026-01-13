@@ -35,7 +35,7 @@ logger = logging.getLogger(__name__)
 # Tools Imports
 try:
     from app_tools.pdf_tools import merge_pdfs, split_pdf, compress_pdf, add_watermark
-    from app_tools.pdf_converter import pdf_to_word, word_to_pdf
+    from app_tools.pdf_converter import pdf_to_word, word_to_pdf, pdf_to_excel
     from app_tools.image_tools import convert_image
     from app_tools.qr_tools import generate_qr
     from app_tools.security_tools import protect_pdf, unlock_pdf
@@ -801,6 +801,42 @@ async def pdf_to_word_endpoint(
     except ValueError as e:
         logger.error(f"PDF to Word error: {e}")
         raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error(f"PDF to Word error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to convert PDF to Word")
+
+
+@app.post("/api/v1/tools/pdf-to-excel")
+async def pdf_to_excel_endpoint(
+    file: UploadFile = File(...),
+    api_key: str = Header(None, alias="X-API-Key")
+):
+    """
+    Convert PDF to Excel (XLSX) by extracting tables
+    """
+    if file.content_type != "application/pdf":
+        raise HTTPException(status_code=400, detail="File must be a PDF")
+    
+    try:
+        content = await file.read()
+        result = pdf_to_excel(content)
+        
+        # Get filename without extension
+        original_name = file.filename or "document"
+        if original_name.lower().endswith('.pdf'):
+            original_name = original_name[:-4]
+        
+        return StreamingResponse(
+            io.BytesIO(result),
+            media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            headers={"Content-Disposition": f'attachment; filename="{original_name}.xlsx"'}
+        )
+    except ValueError as e:
+        logger.error(f"PDF to Excel error: {e}")
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error(f"PDF to Excel error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to convert PDF to Excel")
     except Exception as e:
         logger.error(f"PDF to Word error: {e}")
         raise HTTPException(status_code=500, detail="Failed to convert PDF to Word")

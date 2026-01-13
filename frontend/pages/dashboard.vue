@@ -164,6 +164,20 @@
         </p>
       </NuxtLink>
 
+      <!-- PDF to Excel -->
+      <NuxtLink 
+        to="/tools/pdf-to-excel" 
+        class="group block border-2 border-[var(--foreground)] p-8 transition-all duration-100 hover:bg-[var(--foreground)] hover:text-[var(--background)] no-underline"
+      >
+        <div class="w-14 h-14 border-2 border-current flex items-center justify-center mb-6 transition-colors duration-100">
+          <Icon name="heroicons:table-cells" class="w-7 h-7" />
+        </div>
+        <h3 class="font-serif text-xl font-bold mb-2">PDF to Excel</h3>
+        <p class="text-sm opacity-70">
+          Convert PDF tables to editable Excel spreadsheet
+        </p>
+      </NuxtLink>
+
       <!-- Watermark PDF -->
       <NuxtLink 
         to="/tools/watermark-pdf" 

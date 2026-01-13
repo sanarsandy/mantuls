@@ -131,7 +131,7 @@
           <p class="font-serif font-bold text-lg mb-4">PDF Split Successfully!</p>
           <a 
             :href="downloadUrl" 
-            :download="splitMode === 'all' ? 'split-pages.zip' : 'extracted.pdf'"
+            :download="resultFilename"
             class="btn-mono-primary inline-flex"
           >
             <Icon name="heroicons:arrow-down-tray" class="w-4 h-4 mr-2" />
@@ -180,6 +180,7 @@ const pageRange = ref('')
 const processing = ref(false)
 const error = ref(null)
 const downloadUrl = ref(null)
+const resultFilename = ref('document.pdf')
 
 const handleFileSelect = (event) => {
   const selectedFile = event.target.files[0]
@@ -233,6 +234,14 @@ const splitPDF = async () => {
 
     const blob = await response.blob()
     downloadUrl.value = URL.createObjectURL(blob)
+    
+    // Set filename based on the mode we just executed
+    if (splitMode.value === 'all') {
+      resultFilename.value = 'split-pages.zip'
+    } else {
+      resultFilename.value = file.value.name.replace('.pdf', '_extracted.pdf')
+    }
+    
   } catch (err) {
     error.value = err.message
   } finally {
