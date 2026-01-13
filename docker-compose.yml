@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+ 
+  app:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: development
+    container_name: lms-app
+    ports:
+      - "3000:3000"
+    environment:
+      # Browser calls this (Public URL)
+      NUXT_PUBLIC_API_BASE: http://localhost:8000
+      # Server-side calls this (Internal Docker Network URL)
+      NUXT_API_INTERNAL: http://api:8000
+      NODE_ENV: development
+    networks:
+      - lms-network
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: npm run dev
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ocr-api
+    ports:
+      - "8000:8000"
+    environment:
+      - OCR_SECRET_KEY=${OCR_SECRET_KEY}
+      - JWT_SECRET=${JWT_SECRET}
+    networks:
+      - lms-network
+    volumes:
+      - ./backend:/app
+      - ./backend/api_keys.json:/app/api_keys.json
+      - ./backend/config.json:/app/config.json
+      # Mount models directory if we want to persist downloaded models
+      # - ./backend/models:/root/.paddleocr
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+networks:
+  lms-network:
+    driver: bridge
+  minio-network:
+    external: true
+
+volumes:
+  postgres_data:
+

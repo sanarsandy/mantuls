@@ -1,0 +1,55 @@
+# ManTuls Production Docker Compose
+# Usage: docker compose -f docker-compose.prod.yml up -d
+
+services:
+  
+  # Frontend Application (Nuxt.js)
+  app:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    container_name: mantuls-app-prod
+    restart: unless-stopped
+    ports:
+      - "3003:3000"
+    environment:
+      NODE_ENV: production
+      NUXT_PUBLIC_API_BASE: ${NUXT_PUBLIC_API_BASE:-https://api.yourdomain.com}
+      NITRO_PRESET: node-server
+    depends_on:
+      - api
+    networks:
+      - mantuls-network
+
+  # Backend API (FastAPI)
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: mantuls-api-prod
+    restart: unless-stopped
+    ports:
+      - "8003:8000"
+    environment:
+      - OCR_SECRET_KEY=${OCR_SECRET_KEY}
+      - JWT_SECRET=${JWT_SECRET}
+    networks:
+      - mantuls-network
+    volumes:
+      - ./backend/api_keys.json:/app/api_keys.json
+      - ./backend/config.json:/app/config.json
+      # Persist PaddleOCR models to avoid re-downloading
+      - paddleocr_models:/root/.paddleocr
+      # Persist rembg models
+      - rembg_models:/root/.u2net
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --workers 4
+
+networks:
+  mantuls-network:
+    driver: bridge
+
+volumes:
+  paddleocr_models:
+    driver: local
+  rembg_models:
+    driver: local

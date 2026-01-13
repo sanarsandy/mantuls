@@ -1,0 +1,474 @@
+/* Minimalist Monochrome Design System */
+/* Fonts: Playfair Display (display), Source Serif 4 (body), JetBrains Mono (mono) */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,500&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ========================================
+   CSS Variables - Minimalist Monochrome
+   ======================================== */
+:root {
+  --background: #FFFFFF;
+  --foreground: #000000;
+  --muted: #F5F5F5;
+  --muted-foreground: #525252;
+  --border: #000000;
+  --border-light: #E5E5E5;
+  --card: #FFFFFF;
+  --card-foreground: #000000;
+  --ring: #000000;
+}
+
+/* ========================================
+   Base Styles
+   ======================================== */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    background-color: var(--background);
+    color: var(--foreground);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.625;
+  }
+
+  /* Subtle noise texture for paper-like quality */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.02;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 700;
+    color: var(--foreground);
+    letter-spacing: -0.025em;
+  }
+
+  /* Links - underline on hover */
+  a {
+    color: var(--foreground);
+    text-decoration: none;
+    transition: all 100ms;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  /* Remove all border radius */
+  *, *::before, *::after {
+    border-radius: 0 !important;
+  }
+
+  /* Focus states - accessibility */
+  *:focus-visible {
+    outline: 3px solid var(--foreground);
+    outline-offset: 3px;
+  }
+}
+
+/* ========================================
+   Component Styles
+   ======================================== */
+@layer components {
+  
+  /* Primary Button - Black with instant invert */
+  .btn-mono-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 2rem;
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    background-color: var(--foreground);
+    color: var(--background);
+    border: 2px solid var(--foreground);
+    cursor: pointer;
+    transition: all 100ms;
+  }
+
+  .btn-mono-primary:hover {
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+
+  .btn-mono-primary:focus-visible {
+    outline: 3px solid var(--foreground);
+    outline-offset: 3px;
+  }
+
+  .btn-mono-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Secondary/Outline Button */
+  .btn-mono-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 2rem;
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    background-color: transparent;
+    color: var(--foreground);
+    border: 2px solid var(--foreground);
+    cursor: pointer;
+    transition: all 100ms;
+  }
+
+  .btn-mono-outline:hover {
+    background-color: var(--foreground);
+    color: var(--background);
+  }
+
+  /* Ghost Button - text only */
+  .btn-mono-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 0.875rem;
+    background: transparent;
+    color: var(--foreground);
+    border: none;
+    cursor: pointer;
+    transition: all 100ms;
+  }
+
+  .btn-mono-ghost:hover {
+    text-decoration: underline;
+  }
+
+  /* Card - Sharp edges, black border */
+  .card-mono {
+    background-color: var(--card);
+    border: 1px solid var(--foreground);
+    padding: 2rem;
+    position: relative;
+  }
+
+  .card-mono-hover {
+    background-color: var(--card);
+    border: 1px solid var(--foreground);
+    padding: 2rem;
+    transition: all 100ms;
+  }
+
+  .card-mono-hover:hover {
+    border-width: 2px;
+    background-color: var(--foreground);
+    color: var(--background);
+  }
+
+  /* Inverted Card */
+  .card-mono-inverted {
+    background-color: var(--foreground);
+    color: var(--background);
+    padding: 2rem;
+  }
+
+  /* Input - Bottom border style */
+  .input-mono {
+    width: 100%;
+    padding: 1rem 0;
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 1rem;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid var(--foreground);
+    color: var(--foreground);
+    outline: none;
+    transition: all 100ms;
+  }
+
+  .input-mono::placeholder {
+    color: var(--muted-foreground);
+    font-style: italic;
+  }
+
+  .input-mono:focus {
+    border-bottom-width: 4px;
+  }
+
+  /* Input with full border */
+  .input-mono-bordered {
+    width: 100%;
+    padding: 1rem;
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 1rem;
+    background: var(--background);
+    border: 2px solid var(--foreground);
+    color: var(--foreground);
+    outline: none;
+    transition: all 100ms;
+  }
+
+  .input-mono-bordered:focus {
+    border-width: 3px;
+  }
+
+  /* Select */
+  .select-mono {
+    width: 100%;
+    padding: 1rem;
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 1rem;
+    background: var(--background);
+    border: 2px solid var(--foreground);
+    color: var(--foreground);
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23000000' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+  }
+
+  /* Toggle Switch - Monochrome */
+  .toggle-mono {
+    position: relative;
+    width: 3rem;
+    height: 1.5rem;
+    background-color: var(--border-light);
+    border: 2px solid var(--foreground);
+    cursor: pointer;
+    transition: all 100ms;
+  }
+
+  .toggle-mono.active {
+    background-color: var(--foreground);
+  }
+
+  .toggle-mono::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 1rem;
+    height: calc(100% - 4px);
+    background-color: var(--foreground);
+    transition: all 100ms;
+  }
+
+  .toggle-mono.active::after {
+    left: calc(100% - 1.25rem);
+    background-color: var(--background);
+  }
+
+  /* Thick horizontal rule */
+  .rule-thick {
+    height: 4px;
+    background-color: var(--foreground);
+    border: none;
+    margin: 2rem 0;
+  }
+
+  .rule-ultra {
+    height: 8px;
+    background-color: var(--foreground);
+    border: none;
+    margin: 2rem 0;
+  }
+
+  /* Decorative square (used in hero) */
+  .deco-square {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border: 2px solid var(--foreground);
+    margin-left: 1rem;
+  }
+
+  /* Label style */
+  .label-mono {
+    display: block;
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted-foreground);
+    margin-bottom: 0.5rem;
+  }
+
+  /* Mono text (for codes, keys) */
+  .text-mono {
+    font-family: 'JetBrains Mono', Consolas, monospace;
+    font-size: 0.875rem;
+  }
+
+  /* Section with horizontal line texture */
+  .section-textured {
+    position: relative;
+  }
+
+  .section-textured::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    opacity: 0.015;
+    background-image: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 1px,
+      #000 1px,
+      #000 2px
+    );
+    background-size: 100% 4px;
+  }
+
+  /* Inverted section texture */
+  .section-inverted {
+    background-color: var(--foreground);
+    color: var(--background);
+    position: relative;
+  }
+
+  .section-inverted::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    opacity: 0.03;
+    background-image: repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 1px,
+      #fff 1px,
+      #fff 2px
+    );
+    background-size: 4px 100%;
+  }
+
+  /* Loading spinner - monochrome */
+  .spinner-mono {
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 3px solid var(--border-light);
+    border-top-color: var(--foreground);
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Badge - monochrome */
+  .badge-mono {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border: 1px solid var(--foreground);
+    background: transparent;
+  }
+
+  .badge-mono-filled {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: var(--foreground);
+    color: var(--background);
+  }
+
+  /* Alert/Error box */
+  .alert-mono-error {
+    padding: 1rem;
+    border: 2px solid var(--foreground);
+    background: var(--muted);
+    font-family: 'Source Serif 4', Georgia, serif;
+  }
+
+  .alert-mono-success {
+    padding: 1rem;
+    border: 2px solid var(--foreground);
+    background: var(--background);
+    font-family: 'Source Serif 4', Georgia, serif;
+  }
+
+  /* Modal backdrop */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    padding: 1rem;
+  }
+
+  .modal-content {
+    background: var(--background);
+    border: 2px solid var(--foreground);
+    max-width: 40rem;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+}
+
+/* ========================================
+   Utility Classes
+   ======================================== */
+@layer utilities {
+  .tracking-widest {
+    letter-spacing: 0.1em;
+  }
+
+  .tracking-tight {
+    letter-spacing: -0.025em;
+  }
+
+  .border-b-thick {
+    border-bottom: 4px solid var(--foreground);
+  }
+
+  .border-b-ultra {
+    border-bottom: 8px solid var(--foreground);
+  }
+
+  /* Remove underline for links when needed */
+  .no-underline:hover {
+    text-decoration: none;
+  }
+}

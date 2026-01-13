@@ -1,0 +1,34 @@
+# Environment Variables
+.env
+.env.*
+!.env.example
+
+# Backend Secrets & Data
+backend/api_keys.json
+backend/config.json
+backend/credentials.json
+backend/service_account.json
+backend/__pycache__/
+backend/*.pyc
+backend/.pytest_cache/
+backend/.coverage
+backend/htmlcov/
+backend/venv/
+backend/.venv/
+
+# Frontend Dependencies & Build
+frontend/node_modules/
+frontend/.nuxt/
+frontend/.output/
+frontend/dist/
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/.pnpm-debug.log*
+
+# Docker
+.docker/
+
+# OS Specific
+.DS_Store
+Thumbs.db
