@@ -4,8 +4,6 @@
 !.env.example
 
 # Backend Secrets & Data
-backend/api_keys.json
-backend/config.json
 backend/credentials.json
 backend/service_account.json
 backend/__pycache__/
