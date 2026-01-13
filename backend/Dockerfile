@@ -22,6 +22,11 @@ RUN pip install --no-cache-dir --default-timeout=1000 -r requirements.txt
 # Copy application code
 COPY . .
 
+# Preload AI Models (OCR, etc) to prevent race conditions at runtime
+# and to include models in the image
+RUN python preload_models.py
+
+
 # Expose port
 EXPOSE 8000
 

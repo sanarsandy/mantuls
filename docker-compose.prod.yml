@@ -38,10 +38,6 @@ services:
     volumes:
       - ./backend/api_keys.json:/app/api_keys.json
       - ./backend/config.json:/app/config.json
-      # Persist PaddleOCR models to avoid re-downloading
-      - paddleocr_models:/root/.paddleocr
-      # Persist rembg models
-      - rembg_models:/root/.u2net
     command: uvicorn main:app --host 0.0.0.0 --port 8000 --workers 4
 
 networks:
@@ -49,7 +45,5 @@ networks:
     driver: bridge
 
 volumes:
-  paddleocr_models:
-    driver: local
-  rembg_models:
+  postgres_data:
     driver: local
