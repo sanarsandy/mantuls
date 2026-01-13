@@ -32,7 +32,11 @@ def _load_api_keys() -> Dict[str, Any]:
     if API_KEYS_FILE.exists():
         try:
             with open(API_KEYS_FILE, "r") as f:
-                return json.load(f)
+                data = json.load(f)
+                # Handle case where user initialized with [] (List) instead of Dict
+                if isinstance(data, list):
+                    return {"keys": data, "enabled": True}
+                return data
         except Exception as e:
             logger.error(f"Error loading API keys: {e}")
     return {"keys": [], "enabled": True}
