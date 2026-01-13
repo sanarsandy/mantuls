@@ -20,6 +20,19 @@ echo "ℹ️  Using API Base URL: $API_BASE_URL"
 # Export vars to ensuring they are picked up
 export NUXT_PUBLIC_API_BASE=$API_BASE_URL
 
+# Ensure JSON data files exist to prevent Docker from creating directories
+if [ ! -f backend/config.json ]; then
+    echo "📄 Creating initial backend/config.json..."
+    echo "{}" > backend/config.json
+    chmod 666 backend/config.json
+fi
+
+if [ ! -f backend/api_keys.json ]; then
+    echo "🔑 Creating initial backend/api_keys.json..."
+    echo "[]" > backend/api_keys.json
+    chmod 666 backend/api_keys.json
+fi
+
 echo "📦 Building and Starting Containers..."
 docker compose -f docker-compose.prod.yml down
 docker compose -f docker-compose.prod.yml up -d --build
