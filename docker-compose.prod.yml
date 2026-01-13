@@ -14,7 +14,7 @@ services:
       - "3011:3000"
     environment:
       NODE_ENV: production
-      NUXT_PUBLIC_API_BASE: ${NUXT_PUBLIC_API_BASE:-https://api.yourdomain.com}
+      NUXT_PUBLIC_API_BASE: ${NUXT_PUBLIC_API_BASE}
       NITRO_PRESET: node-server
     depends_on:
       - api
