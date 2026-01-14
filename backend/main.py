@@ -39,6 +39,8 @@ try:
     from app_tools.image_tools import convert_image
     from app_tools.qr_tools import generate_qr
     from app_tools.security_tools import protect_pdf, unlock_pdf
+    from app_tools.images_to_pdf import images_to_pdf
+    from app_tools.signature_tools import add_signature, get_pdf_page_count, get_pdf_page_dimensions
 except ImportError as e:
     logger.error(f"CRITICAL ERROR: Failed to import standard tools: {e}")
 
@@ -874,6 +876,166 @@ async def watermark_pdf_endpoint(
     except Exception as e:
         logger.error(f"Watermark PDF error: {e}")
         raise HTTPException(status_code=500, detail="Failed to add watermark to PDF")
+
+
+@app.post("/api/v1/tools/images-to-pdf")
+async def images_to_pdf_endpoint(
+    files: list[UploadFile] = File(...),
+    api_key: str = Header(None, alias="X-API-Key")
+):
+    """
+    Convert multiple images to a single PDF file.
+    Used by Scanner to PDF feature.
+    """
+    if not files:
+        raise HTTPException(status_code=400, detail="At least one image is required")
+    
+    # Validate file types
+    allowed_types = ["image/jpeg", "image/png", "image/webp"]
+    for f in files:
+        if f.content_type not in allowed_types:
+            raise HTTPException(
+                status_code=400, 
+                detail=f"Invalid file type: {f.filename}. Only JPEG, PNG, and WEBP images are allowed."
+            )
+    
+    try:
+        image_bytes_list = []
+        for f in files:
+            content = await f.read()
+            image_bytes_list.append(content)
+        
+        result = images_to_pdf(image_bytes_list)
+        
+        return StreamingResponse(
+            io.BytesIO(result),
+            media_type="application/pdf",
+            headers={"Content-Disposition": "attachment; filename=scanned_document.pdf"}
+        )
+    except ValueError as e:
+        logger.error(f"Images to PDF error: {e}")
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error(f"Images to PDF error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to convert images to PDF")
+
+
+@app.post("/api/v1/tools/sign-pdf")
+async def sign_pdf_endpoint(
+    file: UploadFile = File(...),
+    signature: UploadFile = File(...),
+    page: int = Form(1),
+    x: float = Form(100),
+    y: float = Form(100),
+    width: int = Form(150),
+    height: int = Form(50),
+    api_key: str = Header(None, alias="X-API-Key")
+):
+    """
+    Add signature to PDF at specified position.
+    
+    Args:
+        file: PDF file
+        signature: Signature image (PNG with transparency preferred)
+        page: Page number (1-indexed)
+        x: X position from left edge
+        y: Y position from bottom edge
+        width: Signature width
+        height: Signature height
+    """
+    if file.content_type != "application/pdf":
+        raise HTTPException(status_code=400, detail="File must be a PDF")
+    
+    allowed_sig_types = ["image/png", "image/jpeg", "image/webp"]
+    if signature.content_type not in allowed_sig_types:
+        raise HTTPException(status_code=400, detail="Signature must be an image (PNG, JPEG, or WEBP)")
+    
+    try:
+        pdf_content = await file.read()
+        sig_content = await signature.read()
+        
+        result = add_signature(
+            pdf_bytes=pdf_content,
+            signature_image=sig_content,
+            page_number=page,
+            x=x,
+            y=y,
+            width=width,
+            height=height
+        )
+        
+        return StreamingResponse(
+            io.BytesIO(result),
+            media_type="application/pdf",
+            headers={"Content-Disposition": f'attachment; filename="signed_{file.filename}"'}
+        )
+    except ValueError as e:
+        logger.error(f"Sign PDF error: {e}")
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error(f"Sign PDF error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to sign PDF")
+
+
+@app.post("/api/v1/tools/pdf-info")
+async def pdf_info_endpoint(
+    file: UploadFile = File(...),
+    api_key: str = Header(None, alias="X-API-Key")
+):
+    """
+    Get PDF info (page count and dimensions).
+    Used by Sign PDF frontend to know page count and positioning.
+    """
+    if file.content_type != "application/pdf":
+        raise HTTPException(status_code=400, detail="File must be a PDF")
+    
+    try:
+        content = await file.read()
+        page_count = get_pdf_page_count(content)
+        
+        # Get dimensions for first page
+        dimensions = get_pdf_page_dimensions(content, 1)
+        
+        return {
+            "page_count": page_count,
+            "width": dimensions["width"],
+            "height": dimensions["height"]
+        }
+    except Exception as e:
+        logger.error(f"PDF info error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to get PDF info")
+
+
+@app.post("/api/v1/tools/pdf-preview")
+async def pdf_preview_endpoint(
+    file: UploadFile = File(...),
+    page: int = Query(1, description="Page number"),
+    api_key: str = Header(None, alias="X-API-Key")
+):
+    """
+    Render a PDF page as an image for preview.
+    Used by Sign PDF frontend for visual positioning.
+    """
+    if file.content_type != "application/pdf":
+        raise HTTPException(status_code=400, detail="File must be a PDF")
+    
+    try:
+        from app_tools.signature_tools import render_pdf_page_preview
+        
+        content = await file.read()
+        preview_image = render_pdf_page_preview(content, page_number=page)
+        
+        return StreamingResponse(
+            io.BytesIO(preview_image),
+            media_type="image/jpeg",
+            headers={"Content-Disposition": "inline; filename=preview.jpg"}
+        )
+    except ValueError as e:
+        logger.error(f"PDF preview error: {e}")
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error(f"PDF preview error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to generate preview")
 
 
 @app.post("/api/v1/tools/word-to-pdf")

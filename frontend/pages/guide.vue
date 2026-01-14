@@ -317,6 +317,50 @@ const tools = [
       'Coba scan QR code sebelum menyebarluaskan untuk memastikan berfungsi.'
     ],
     link: '/tools/qr-generator'
+  },
+  {
+    id: 'scanner-to-pdf',
+    name: 'Scanner to PDF',
+    icon: 'heroicons:camera',
+    description: 'Ubah foto dokumen menjadi PDF yang rapi dengan efek scan profesional.',
+    formats: ['JPG', 'PNG', 'WEBP → PDF'],
+    steps: [
+      'Ambil foto dokumen menggunakan kamera atau upload dari galeri.',
+      'Tambahkan beberapa halaman jika diperlukan.',
+      'Atur urutan halaman dengan drag & drop.',
+      'Aktifkan "Document Enhancement" untuk efek scan profesional.',
+      'Klik "Create PDF" dan download hasilnya.'
+    ],
+    tips: [
+      'Gunakan pencahayaan yang baik saat mengambil foto untuk hasil terbaik.',
+      'Pastikan dokumen rata dan tidak terlipat.',
+      'Document Enhancement akan meningkatkan kontras dan menghilangkan bayangan.',
+      'Anda bisa menghapus halaman tertentu dengan tombol × di setiap preview.'
+    ],
+    link: '/tools/scanner-to-pdf'
+  },
+  {
+    id: 'sign-pdf',
+    name: 'Sign PDF',
+    icon: 'heroicons:pencil-square',
+    description: 'Tambahkan tanda tangan digital ke dokumen PDF.',
+    formats: ['PDF + Signature Image'],
+    steps: [
+      'Upload file PDF yang ingin ditandatangani.',
+      'Buat tanda tangan dengan menggambar di canvas atau upload gambar.',
+      'Pilih halaman yang akan diberi tanda tangan.',
+      'Drag tanda tangan ke posisi yang diinginkan pada preview PDF.',
+      'Gunakan handle di sudut atau sisi untuk resize/crop tanda tangan.',
+      'Klik "Sign PDF" dan download dokumen yang sudah ditandatangani.'
+    ],
+    tips: [
+      'Gambar tanda tangan dengan goresan yang jelas untuk hasil terbaik.',
+      'Gunakan gambar PNG dengan background transparan untuk upload signature.',
+      'DraG handle sudut untuk resize proporsional, handle sisi untuk crop.',
+      'Quick Position button membantu menempatkan tanda tangan dengan cepat.',
+      'Anda bisa menggunakan slider Width/Height untuk mengatur ukuran secara presisi.'
+    ],
+    link: '/tools/sign-pdf'
   }
 ]
 </script>

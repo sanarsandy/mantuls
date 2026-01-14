@@ -38,6 +38,34 @@
         </p>
       </NuxtLink>
 
+      <!-- Scanner to PDF (NEW) -->
+      <NuxtLink 
+        to="/tools/scanner-to-pdf" 
+        class="group block border-2 border-[var(--foreground)] p-8 transition-all duration-100 hover:bg-[var(--foreground)] hover:text-[var(--background)] no-underline"
+      >
+        <div class="w-14 h-14 border-2 border-current flex items-center justify-center mb-6 transition-colors duration-100">
+          <Icon name="heroicons:camera" class="w-7 h-7" />
+        </div>
+        <h3 class="font-serif text-xl font-bold mb-2">Scanner to PDF</h3>
+        <p class="text-sm opacity-70">
+          Capture documents with camera to PDF
+        </p>
+      </NuxtLink>
+
+      <!-- Sign PDF -->
+      <NuxtLink 
+        to="/tools/sign-pdf" 
+        class="group block border-2 border-[var(--foreground)] p-8 transition-all duration-100 hover:bg-[var(--foreground)] hover:text-[var(--background)] no-underline"
+      >
+        <div class="w-14 h-14 border-2 border-current flex items-center justify-center mb-6 transition-colors duration-100">
+          <Icon name="heroicons:pencil-square" class="w-7 h-7" />
+        </div>
+        <h3 class="font-serif text-xl font-bold mb-2">Sign PDF</h3>
+        <p class="text-sm opacity-70">
+          Add your signature to PDF documents
+        </p>
+      </NuxtLink>
+
       <!-- Merge PDF -->
       <NuxtLink 
         to="/tools/merge-pdf" 
