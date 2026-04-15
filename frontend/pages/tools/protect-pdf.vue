@@ -78,17 +78,22 @@
            </div>
         </div>
 
+        <!-- Processing Progress -->
+        <ProcessingProgress 
+          v-if="loading"
+          :status-text="'Mengenkripsi PDF...'"
+          :estimated-seconds="3"
+          icon="heroicons:lock-closed"
+        />
+
         <!-- Action Button -->
         <button 
+          v-else
           @click="processFile"
-          :disabled="!file || !password || loading"
+          :disabled="!file || !password"
           class="btn-mono-primary w-full py-4 text-lg"
         >
-          <span v-if="loading" class="flex items-center justify-center space-x-2">
-            <Icon name="heroicons:arrow-path" class="animate-spin w-5 h-5" />
-            <span>Encrypting PDF...</span>
-          </span>
-          <span v-else class="flex items-center justify-center space-x-2">
+          <span class="flex items-center justify-center space-x-2">
             <Icon name="heroicons:shield-check" class="w-5 h-5" />
             <span>Protect PDF Now</span>
           </span>

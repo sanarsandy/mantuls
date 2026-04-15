@@ -153,16 +153,20 @@
 
       <!-- Action Button -->
       <div v-if="file && !downloadUrl" class="p-6 border-t-2 border-[var(--foreground)] bg-[var(--muted)]">
+        <!-- Processing Progress -->
+        <ProcessingProgress 
+          v-if="processing"
+          :status-text="'Mengompres PDF...'"
+          :estimated-seconds="estimatedTime"
+          icon="heroicons:archive-box-arrow-down"
+        />
+        
         <button 
+          v-else
           @click="compressPDF" 
-          :disabled="processing"
           class="btn-mono-primary w-full"
         >
-          <span v-if="processing" class="flex items-center justify-center">
-            <div class="w-4 h-4 border-2 border-[var(--background)]/30 border-t-[var(--background)] animate-spin mr-2"></div>
-            Compressing...
-          </span>
-          <span v-else class="flex items-center justify-center">
+          <span class="flex items-center justify-center">
             <Icon name="heroicons:archive-box-arrow-down" class="w-4 h-4 mr-2" />
             Compress PDF
           </span>
@@ -191,6 +195,13 @@ const processing = ref(false)
 const error = ref(null)
 const downloadUrl = ref(null)
 const compressedSize = ref(null)
+
+// Estimate processing time based on file size (approx 200KB per second)
+const estimatedTime = computed(() => {
+  if (!file.value) return 5
+  const sizeMB = file.value.size / (1024 * 1024)
+  return Math.max(3, Math.min(30, Math.ceil(sizeMB * 3)))
+})
 
 const handleFileSelect = (event) => {
   const selectedFile = event.target.files[0]

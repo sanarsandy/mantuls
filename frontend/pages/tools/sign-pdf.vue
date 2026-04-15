@@ -397,21 +397,25 @@
       </div>
 
       <!-- Action Button -->
-      <button 
-        v-if="pdfFile && hasSignature && !downloadUrl"
-        @click="signPdf"
-        :disabled="processing"
-        class="btn-mono-primary w-full py-4 text-lg"
-      >
-        <span v-if="processing" class="flex items-center justify-center">
-          <div class="w-5 h-5 border-2 border-[var(--background)]/30 border-t-[var(--background)] animate-spin mr-3"></div>
-          Signing PDF...
-        </span>
-        <span v-else class="flex items-center justify-center">
-          <Icon name="heroicons:pencil-square" class="w-5 h-5 mr-3" />
-          Sign PDF
-        </span>
-      </button>
+      <div v-if="pdfFile && hasSignature && !downloadUrl" class="mt-6">
+        <ProcessingProgress 
+          v-if="processing"
+          :status-text="'Menandatangani PDF...'"
+          :estimated-seconds="4"
+          icon="heroicons:pencil-square"
+        />
+        
+        <button 
+          v-else
+          @click="signPdf"
+          class="btn-mono-primary w-full py-4 text-lg"
+        >
+          <span class="flex items-center justify-center">
+            <Icon name="heroicons:pencil-square" class="w-5 h-5 mr-3" />
+            Sign PDF
+          </span>
+        </button>
+      </div>
     </div>
   </div>
 </template>

@@ -51,9 +51,11 @@
                 <p class="text-sm text-[var(--muted-foreground)]">{{ formatFileSize(selectedFile.size) }}</p>
               </div>
               <div v-if="loading" class="space-y-2">
-                 <Icon name="heroicons:arrow-path" class="w-6 h-6 animate-spin mx-auto" />
-                 <p class="text-sm font-mono">Converting to Word...</p>
-                 <p class="text-xs text-[var(--muted-foreground)]">This may take a moment for large files.</p>
+                 <ProcessingProgress 
+                   :status-text="'Mengkonversi ke Word...'"
+                   :estimated-seconds="estimatedTime"
+                   icon="heroicons:document-arrow-down"
+                 />
               </div>
             </div>
           </div>
@@ -110,6 +112,13 @@ const error = ref('')
 
 const config = useRuntimeConfig()
 const apiBase = config.public.apiBase || 'http://localhost:8000'
+
+// Estimate time based on file size
+const estimatedTime = computed(() => {
+  if (!selectedFile.value) return 8
+  const sizeMB = selectedFile.value.size / (1024 * 1024)
+  return Math.max(5, Math.min(60, Math.ceil(sizeMB * 5)))
+})
 
 const formatFileSize = (bytes) => {
   if (bytes < 1024) return bytes + ' B'

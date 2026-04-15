@@ -120,16 +120,19 @@
 
       <!-- Action Button -->
       <div v-if="files.length > 1 && !downloadUrl" class="p-6 border-t-2 border-[var(--foreground)] bg-[var(--muted)]">
+        <ProcessingProgress 
+          v-if="processing"
+          :status-text="'Menggabungkan PDF...'"
+          :estimated-seconds="estimatedTime"
+          icon="heroicons:document-duplicate"
+        />
+        
         <button 
+          v-else
           @click="mergePDFs" 
-          :disabled="processing"
           class="btn-mono-primary w-full"
         >
-          <span v-if="processing" class="flex items-center justify-center">
-            <div class="w-4 h-4 border-2 border-[var(--background)]/30 border-t-[var(--background)] animate-spin mr-2"></div>
-            Processing...
-          </span>
-          <span v-else class="flex items-center justify-center">
+          <span class="flex items-center justify-center">
             <Icon name="heroicons:document-duplicate" class="w-4 h-4 mr-2" />
             Merge {{ files.length }} Files
           </span>
@@ -158,6 +161,11 @@ const files = ref([])
 const processing = ref(false)
 const error = ref(null)
 const downloadUrl = ref(null)
+
+// Estimate time: ~1s per file
+const estimatedTime = computed(() => {
+  return Math.max(2, files.value.length * 1)
+})
 
 const handleFileSelect = (event) => {
   const selectedFiles = Array.from(event.target.files)

@@ -142,16 +142,19 @@
 
       <!-- Action Button -->
       <div v-if="file && !downloadUrl" class="p-6 border-t-2 border-[var(--foreground)] bg-[var(--muted)]">
+        <ProcessingProgress 
+          v-if="processing"
+          :status-text="'Memisahkan PDF...'"
+          :estimated-seconds="estimatedTime"
+          icon="heroicons:scissors"
+        />
+        
         <button 
+          v-else
           @click="splitPDF" 
-          :disabled="processing"
           class="btn-mono-primary w-full"
         >
-          <span v-if="processing" class="flex items-center justify-center">
-            <div class="w-4 h-4 border-2 border-[var(--background)]/30 border-t-[var(--background)] animate-spin mr-2"></div>
-            Processing...
-          </span>
-          <span v-else class="flex items-center justify-center">
+          <span class="flex items-center justify-center">
             <Icon name="heroicons:scissors" class="w-4 h-4 mr-2" />
             Split PDF
           </span>
@@ -181,6 +184,13 @@ const processing = ref(false)
 const error = ref(null)
 const downloadUrl = ref(null)
 const resultFilename = ref('document.pdf')
+
+// Estimate time based on file size
+const estimatedTime = computed(() => {
+  if (!file.value) return 5
+  const sizeMB = file.value.size / (1024 * 1024)
+  return Math.max(3, Math.min(20, Math.ceil(sizeMB * 2)))
+})
 
 const handleFileSelect = (event) => {
   const selectedFile = event.target.files[0]

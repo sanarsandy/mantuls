@@ -234,16 +234,19 @@
         v-if="capturedImages.length > 0 && !downloadUrl" 
         class="p-6 border-t-2 border-[var(--foreground)] bg-[var(--muted)]"
       >
+        <ProcessingProgress 
+          v-if="processing"
+          :status-text="'Membuat PDF...'"
+          :estimated-seconds="estimatedTime"
+          icon="heroicons:document"
+        />
+        
         <button 
+          v-else
           @click="generatePDF" 
-          :disabled="processing"
           class="btn-mono-primary w-full"
         >
-          <span v-if="processing" class="flex items-center justify-center">
-            <div class="w-4 h-4 border-2 border-[var(--background)]/30 border-t-[var(--background)] animate-spin mr-2"></div>
-            Generating PDF...
-          </span>
-          <span v-else class="flex items-center justify-center">
+          <span class="flex items-center justify-center">
             <Icon name="heroicons:document" class="w-4 h-4 mr-2" />
             Generate PDF ({{ capturedImages.length }} pages)
           </span>
@@ -291,6 +294,11 @@ const capturedImages = ref([])
 const processing = ref(false)
 const error = ref(null)
 const downloadUrl = ref(null)
+
+// Estimate time based on image count (~1.5s per image)
+const estimatedTime = computed(() => {
+  return Math.max(3, Math.ceil(capturedImages.value.length * 1.5))
+})
 
 let mediaStream = null
 
