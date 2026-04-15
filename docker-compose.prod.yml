@@ -39,7 +39,11 @@ services:
     volumes:
       - ./backend/api_keys.json:/app/api_keys.json
       - ./backend/config.json:/app/config.json
-    command: uvicorn main:app --host 0.0.0.0 --port 8000 --workers 4
+      # Persist SQLite DB across container rebuilds
+      - ./backend/mantuls.db:/app/mantuls.db
+    # SQLite + WAL supports concurrent reads but single writer;
+    # keep workers=1 for safety. Upgrade to PostgreSQL + workers>1 if needed.
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --workers 1
 
 networks:
   mantuls-network:

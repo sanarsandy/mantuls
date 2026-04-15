@@ -33,6 +33,15 @@ if [ ! -f backend/api_keys.json ]; then
     chmod 666 backend/api_keys.json
 fi
 
+# Ensure SQLite DB file exists BEFORE Docker mounts it.
+# If the path doesn't exist, Docker creates a directory instead of a file,
+# which breaks SQLite completely.
+if [ ! -f backend/mantuls.db ]; then
+    echo "🗄️  Creating initial backend/mantuls.db..."
+    touch backend/mantuls.db
+    chmod 666 backend/mantuls.db
+fi
+
 echo "📦 Building and Starting Containers..."
 docker compose -f docker-compose.prod.yml down
 docker compose -f docker-compose.prod.yml up -d --build

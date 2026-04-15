@@ -16,16 +16,18 @@ from slowapi.errors import RateLimitExceeded
 
 from providers import get_provider, list_providers, get_provider_names
 from config import (
-    load_config, save_config, get_active_provider, 
+    load_config, save_config, get_active_provider,
     get_provider_config, set_active_provider, update_provider_config
 )
 from api_keys import (
-    create_api_key, validate_api_key, list_api_keys, 
+    create_api_key, validate_api_key, list_api_keys,
     revoke_api_key, delete_api_key, is_auth_enabled, set_auth_enabled,
     update_api_key, get_api_key_by_id, increment_usage
 )
 from auth_tokens import generate_frontend_token, verify_frontend_token
 from sso_auth import sso_login, generate_jwt_token, verify_jwt_token
+from database import init_db
+from routers.whiteboard import router as whiteboard_router
 
 
 # Configure logging
@@ -100,14 +102,25 @@ tasks_db: Dict[str, dict] = {}
 
 # ============== Startup Events ==============
 
+app.include_router(whiteboard_router)
+
+
 @app.on_event("startup")
 async def startup_event():
-    """Pre-load PaddleOCR model on startup for faster first request"""
+    """Initialise DB tables, then pre-load PaddleOCR model."""
+    # Database
+    logger.info("Initialising database tables...")
+    try:
+        init_db()
+        logger.info("Database tables ready.")
+    except Exception as e:
+        logger.error(f"Failed to initialise database: {e}")
+
+    # OCR model warm-up
     logger.info("Pre-loading PaddleOCR model...")
     try:
         from providers import get_provider
         paddle_provider = get_provider("paddle_ocr")
-        # Warm up the model by calling _get_engine
         paddle_provider._get_engine({"lang": "latin"})
         logger.info("PaddleOCR model pre-loaded successfully!")
     except Exception as e:

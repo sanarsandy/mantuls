@@ -21,12 +21,19 @@ export default defineNuxtConfig({
     preset: 'node-server'
   },
   vite: {
+    // No @vitejs/plugin-react needed — Excalidraw ships pre-compiled ESM.
+    // We mount it via ReactDOM.createRoot() in ExcalidrawWrapper.vue (client-only).
     server: {
       host: '0.0.0.0',
       allowedHosts: process.env.VITE_ALLOWED_HOSTS
         ? process.env.VITE_ALLOWED_HOSTS.split(',')
         : ['localhost', '127.0.0.1']
-    }
+    },
+    optimizeDeps: {
+      include: ['react', 'react-dom', 'react/jsx-runtime', '@excalidraw/excalidraw'],
+    },
+    ssr: {
+      noExternal: ['@excalidraw/excalidraw'],
+    },
   }
 })
-

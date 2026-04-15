@@ -6,8 +6,12 @@
 # Backend Secrets & Data
 backend/credentials.json
 backend/service_account.json
-backend/__pycache__/
-backend/*.pyc
+**/__pycache__/
+**/*.pyc
+# SQLite database (persisted on server via volume mount, not committed to git)
+backend/mantuls.db
+backend/mantuls.db-shm
+backend/mantuls.db-wal
 backend/.pytest_cache/
 backend/.coverage
 backend/htmlcov/
