@@ -5,16 +5,11 @@
   </div>
 </template>
 
-<style>
-/* Reset everything so Excalidraw gets the full viewport */
-html, body {
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  height: 100%;
-  width: 100%;
-}
-
+<style scoped>
+/*
+  position: fixed + inset: 0 already gives us a fullscreen container without
+  touching html/body — so we don't bleed overflow:hidden into other pages.
+*/
 .whiteboard-shell {
   position: fixed;
   inset: 0;
@@ -23,5 +18,6 @@ html, body {
   display: flex;
   flex-direction: column;
   background: #ffffff;
+  overflow: hidden;
 }
 </style>
