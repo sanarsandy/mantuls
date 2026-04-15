@@ -46,4 +46,5 @@ def init_db():
     """Create all tables. Called on app startup."""
     # Import models so Base.metadata knows about them
     from models.whiteboard import WhiteboardRoom, WhiteboardSnapshot, WhiteboardMember  # noqa
+    from models.project import Project, ProjectMember, ProjectColumn, Task, TaskComment  # noqa
     Base.metadata.create_all(bind=engine)

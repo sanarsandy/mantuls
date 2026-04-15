@@ -28,6 +28,7 @@ from auth_tokens import generate_frontend_token, verify_frontend_token
 from sso_auth import sso_login, generate_jwt_token, verify_jwt_token
 from database import init_db
 from routers.whiteboard import router as whiteboard_router
+from routers.project import router as project_router
 
 
 # Configure logging
@@ -103,6 +104,7 @@ tasks_db: Dict[str, dict] = {}
 # ============== Startup Events ==============
 
 app.include_router(whiteboard_router)
+app.include_router(project_router)
 
 
 @app.on_event("startup")

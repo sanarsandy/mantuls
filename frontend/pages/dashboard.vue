@@ -44,8 +44,25 @@
         </p>
       </a>
 
+      <!-- Project Management (opens in new tab) -->
+      <a
+        href="/tools/project"
+        target="_blank"
+        rel="noopener"
+        class="group block border-2 border-[var(--foreground)] p-8 transition-all duration-100 hover:bg-[var(--foreground)] hover:text-[var(--background)] no-underline relative"
+      >
+        <span class="absolute top-3 right-3 text-xs font-bold px-2 py-0.5 border border-current opacity-50 uppercase tracking-wide">new tab</span>
+        <div class="w-14 h-14 border-2 border-current flex items-center justify-center mb-6 transition-colors duration-100">
+          <Icon name="heroicons:clipboard-document-list" class="w-7 h-7" />
+        </div>
+        <h3 class="font-serif text-xl font-bold mb-2">Project Management</h3>
+        <p class="text-sm opacity-70">
+          Kanban board and Gantt chart for managing tasks and timelines
+        </p>
+      </a>
+
       <!-- OCR Scanner -->
-      <NuxtLink 
+      <NuxtLink
         to="/tools/ocr" 
         class="group block border-2 border-[var(--foreground)] p-8 transition-all duration-100 hover:bg-[var(--foreground)] hover:text-[var(--background)] no-underline"
       >
